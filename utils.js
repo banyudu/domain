@@ -142,8 +142,23 @@ const describeCertificateByArn = async (acm, certificateArn) => {
 
 const getCertificateArnByDomain = async (acm, domain) => {
   const listRes = await acm.listCertificates().promise()
-  const certificate = listRes.CertificateSummaryList.find((cert) => cert.DomainName === domain)
-  return certificate && certificate.CertificateArn ? certificate.CertificateArn : null
+  for (const certificate of listRes.CertificateSummaryList) {
+    if (certificate.DomainName === domain && certificate.CertificateArn) {
+      if (domain.startsWith('www.')) {
+        const nakedDomain = domain.replace('wwww.', '')
+        // check whether certificate support naked domain
+        const certDetail = await describeCertificateByArn(acm, certificate.CertificateArn)
+        const nakedDomainCert = certDetail.DomainValidationOptions.find(
+          (option) => option.DomainName === nakedDomain
+        )
+        if (!nakedDomainCert) {
+          continue
+        }
+      }
+      return certificate.certificateArn
+    }
+  }
+  return null
 }
 
 /**
