@@ -203,7 +203,7 @@ class Domain extends Component {
     const outputs = {}
     let hasRoot = false
     outputs.domains = subdomains.map((subdomain) => {
-      if (subdomain.domain.startsWith('www')) {
+      if (subdomain.domain.startsWith('www.')) {
         hasRoot = true
       }
       return `https://${subdomain.domain}`
@@ -255,7 +255,7 @@ class Domain extends Component {
             distribution.url
           )
 
-          if (domainState.domain.startsWith('www')) {
+          if (domainState.domain.startsWith('www.')) {
             await removeCloudFrontDomainDnsRecords(
               clients.route53,
               domainState.domain.replace('www.', ''), // it'll move on if it doesn't exist

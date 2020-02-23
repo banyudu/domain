@@ -441,7 +441,7 @@ const configureDnsForCloudFrontDistribution = async (
     }
   }
 
-  if (subdomain.domain.startsWith('www')) {
+  if (subdomain.domain.startsWith('www.')) {
     dnsRecordParams.ChangeBatch.Changes.push({
       Action: 'UPSERT',
       ResourceRecordSet: {
@@ -678,7 +678,7 @@ const createCloudfrontDistribution = async (cf, subdomain, certificateArn) => {
     }
   }
 
-  if (subdomain.domain.startsWith('www')) {
+  if (subdomain.domain.startsWith('www.')) {
     params.DistributionConfig.Aliases.Quantity = 2
     params.DistributionConfig.Aliases.Items.push(`${subdomain.domain.replace('www.', '')}`)
   }
@@ -968,7 +968,7 @@ const addDomainToCloudfrontDistribution = async (cf, subdomain, certificateArn) 
     Items: [subdomain.domain]
   }
 
-  if (subdomain.domain.startsWith('www')) {
+  if (subdomain.domain.startsWith('www.')) {
     params.DistributionConfig.Aliases.Quantity = 2
     params.DistributionConfig.Aliases.Items.push(`${subdomain.domain.replace('www.', '')}`)
   }
